@@ -1,7 +1,7 @@
-import pygame
+import pygame                                        
 import random
 
-pygame.init()
+pygame.init()                                        #initializing the modules
 pygame.mixer.init()
 
 WIDTH = 1200
@@ -10,14 +10,14 @@ HEIGHT = 700
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
-
+                                                     #setting the screen, colour and size of snake
 BACKGROUND = (0, 0, 0)
 SNAKE_COLOUR = (0, 255, 0)
 CELL_SIZE = 20
 GRID_COLOUR = (35, 35, 35)
 SNAKE_HEAD_COLOUR = (79, 121, 66)
 
-EAT_SOUND = pygame.mixer.Sound("eat.wav")
+EAT_SOUND = pygame.mixer.Sound("eat.wav")            #importing the sounds into memory
 CRASH_SOUND = pygame.mixer.Sound("crash.wav")
 
 snake = [
@@ -26,7 +26,7 @@ snake = [
         [60, 100]
     ]
 
-def create_food():
+def create_food():                                   
     while True:
         position = [
             random.randrange(0, WIDTH, CELL_SIZE),
@@ -50,10 +50,10 @@ def reset_game():
     return new_snake, new_food, new_direction, new_score
 
 
-snake, food, direction, score = reset_game()
+snake, food, direction, score = reset_game()            #default starting point of the snake
 FOOD_COLOUR = (255, 0 , 0)
 
-MOVE_DELAY = 200
+MOVE_DELAY = 200 #speed of snake
 last_move_time = pygame.time.get_ticks()
 
 running = True
@@ -69,7 +69,7 @@ DIFFICULTIES = {
     "HARD" : 80
 }
 
-MOVE_DELAY = DIFFICULTIES[difficulty]
+MOVE_DELAY = DIFFICULTIES[difficulty]                   #default mode of difficulty
 
 def draw_text(text, size, colour, x, y):
     text_font = pygame.font.SysFont(None, size)
@@ -114,19 +114,19 @@ def draw_grid():
         )
 
 def  draw_food():
-    pygame.draw.rect(
+    pygame.draw.rect(                             #outer layer of food
         screen,
         (120, 0, 0),
         (food[0], food[1], CELL_SIZE, CELL_SIZE)
     )
 
-    pygame.draw.rect(
+    pygame.draw.rect(                             #inner layer of food
         screen,
         FOOD_COLOUR,
         (food[0] + 4, food[1] + 4, CELL_SIZE - 8, CELL_SIZE - 8)
     )
 
-while running:
+while running:                                    #game state loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -186,7 +186,7 @@ while running:
 
     current_time = pygame.time.get_ticks()
 
-    if (game_state == "PLAYING" and current_time - last_move_time >= MOVE_DELAY):
+    if (game_state == "PLAYING" and current_time - last_move_time >= MOVE_DELAY): #seperates frame rate and movement rate of snake
         new_head = snake[0].copy()
 
         if direction == "UP":
@@ -203,7 +203,7 @@ while running:
 
         snake.insert(0, new_head)
 
-        if(
+        if(                                      #snake collision with walls
             new_head[0] < 0 or
             new_head[0] >= WIDTH or
             new_head[1] < 0 or
@@ -214,7 +214,7 @@ while running:
             high_score = max(high_score, score)
             save_high_score(high_score)
 
-        elif new_head in snake[1:]:
+        elif new_head in snake[1:]:              #snake collision with itself
             CRASH_SOUND.play()
             game_state = "GAME_OVER"
             high_score = max(high_score, score)
@@ -232,7 +232,7 @@ while running:
         last_move_time = current_time
 
         
-    screen.fill(BACKGROUND)
+    screen.fill(BACKGROUND)                                                   #Drawing screens
     draw_grid()
 
     if game_state == "MENU":
